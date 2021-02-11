@@ -124,7 +124,7 @@ Fraction Fraction::operator- ()
 	return Fraction(-m_numerator, m_denominator);
 }
 
-Fraction Fraction::operator+ (const Fraction a)
+Fraction Fraction::operator+ (const Fraction &a)
 {
 	int numerator = m_numerator * a.m_denominator + a.m_numerator * m_denominator;
 	int denominator = m_denominator * a.m_denominator;
@@ -136,7 +136,7 @@ Fraction Fraction::operator+ (const Fraction a)
 	return Fraction(numerator, denominator);
 }
 
-Fraction Fraction::operator- (const Fraction a)
+Fraction Fraction::operator- (const Fraction &a)
 {
 	int numerator = m_numerator * a.m_denominator - a.m_numerator * m_denominator;
 	int denominator = m_denominator * a.m_denominator;
@@ -148,12 +148,12 @@ Fraction Fraction::operator- (const Fraction a)
 	return Fraction(numerator, denominator);
 }
 
-Fraction Fraction::operator* (const Fraction a)
+Fraction Fraction::operator* (const Fraction &a)
 {
 	return Fraction(m_numerator * a.m_numerator, m_denominator * a.m_denominator);
 }
 
-Fraction Fraction::operator/ (const Fraction a)
+Fraction Fraction::operator/ (const Fraction &a)
 {
 	if (a.m_numerator == 0) {
 		std::cout << "ERROR: division by zero" << std::endl;
@@ -163,11 +163,25 @@ Fraction Fraction::operator/ (const Fraction a)
 	}
 }
 
-Fraction Fraction::operator= (const Fraction a)
+Fraction Fraction::operator= (const Fraction &a)
 {
 	m_numerator = a.m_numerator;
 	m_denominator = a.m_denominator;
 	return *this;
+}
+
+
+std::ostream &operator<< (std::ostream &output, const Fraction &a)
+{
+	return output << a.m_numerator << '/' << a.m_denominator;
+}
+
+std::istream &operator>> (std::istream &input, Fraction &a)
+{
+	std::string str;
+	input >> str;
+	a = Fraction(str);
+	return input;
 }
 
 void Fraction::print ()

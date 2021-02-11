@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 class Fraction
 {
@@ -17,14 +18,14 @@ class Fraction
 	Fraction (std::string str);
 
 	Fraction operator- ();
-	Fraction operator+ (const Fraction a);
-	Fraction operator- (const Fraction a);
-	Fraction operator* (const Fraction a);
-	Fraction operator/ (const Fraction a);
-	Fraction operator= (const Fraction a);
+	Fraction operator+ (const Fraction &a);
+	Fraction operator- (const Fraction &a);
+	Fraction operator* (const Fraction &a);
+	Fraction operator/ (const Fraction &a);
+	Fraction operator= (const Fraction &a);
 
-	// std::string operator<< ();
-	// Fraction operator>> ();
+	friend std::ostream &operator<< (std::ostream &output, const Fraction &a);
+	friend std::istream &operator>> (std::istream &input, Fraction &a);
 
 	void print();
 };
