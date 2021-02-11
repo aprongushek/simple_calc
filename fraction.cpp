@@ -39,6 +39,8 @@ int get_gcd(int a, int b)
 
 Fraction::Fraction () : m_numerator(0), m_denominator(1) { }
 
+Fraction::Fraction (int numerator) : m_numerator(numerator), m_denominator(1) { }
+
 Fraction::Fraction (int numerator, int denominator = 1)
 {
 	if (denominator * numerator > 0) {
@@ -80,28 +82,41 @@ Fraction::Fraction (std::string str)
 	}
 
 	int i = 0;
-	while ((str[i] != '.') && (i++ < str.length())); 
-	std::string tmp = str;
-	tmp.erase(i - 1, str.length() - i + 1);
-	str.erase(0, i - 1);
-	str.insert(0, "0");
-	std::stringstream ss;
-	ss << tmp;
-	// std::cout << "whole part is " << ss.str() << '\n';
-	int whole;
-	ss >> whole;
-	ss = std::stringstream();
-	ss << str;
-	// std::cout << "fraction part is " << ss.str() << '\n';
-	double decimal_fraction;
-	ss >> decimal_fraction;
-	// std::cout << tmp << ' ' << str << '\n';
-	// std::cout << std::fixed << std::setprecision(10) << whole << ' ' << decimal_fraction;
-	std::pair<int, int> fraction = decimal_to_common(decimal_fraction);
-	std::cout << '\n' << fraction.first << ' ' << fraction.second;
+	while ((str[i++] != '.') && (i < str.length()));
 
-	m_numerator = (fraction.first + (fraction.second * whole)) * sign;
-	m_denominator = fraction.second;
+	if (i < str.length()) {
+		std::string tmp = str;
+		tmp.erase(i - 1, str.length() - i + 1);
+		std::stringstream ss;
+		ss << tmp;
+		// std::cout << "whole part is " << ss.str() << '\n';
+		int whole;
+		ss >> whole;
+
+		str.erase(0, i - 1);
+		str.insert(0, "0");
+		ss = std::stringstream();
+		ss << str;
+		// std::cout << "fraction part is " << ss.str() << '\n';
+		double decimal_fraction;
+		ss >> decimal_fraction;
+		// std::cout << tmp << ' ' << str << '\n';
+		// std::cout << std::fixed << std::setprecision(10) << whole << ' ' << decimal_fraction;
+		
+		std::pair<int, int> fraction = decimal_to_common(decimal_fraction);
+		// std::cout << '\n' << fraction.first << ' ' << fraction.second;
+		m_numerator = (fraction.first + (fraction.second * whole)) * sign;
+		m_denominator = fraction.second;
+	} else {
+		std::stringstream ss;
+		ss << str;
+		// std::cout << "whole part is " << ss.str() << '\n';
+		int whole;
+		ss >> whole;
+
+		m_numerator = whole * sign;
+		m_denominator = 1;
+	}
 }
 
 Fraction Fraction::operator- ()
