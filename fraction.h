@@ -9,6 +9,8 @@ class Fraction
 	int m_numerator;
 	int m_denominator;
 
+	void fraction_reduction();
+
 	public:
 
 	Fraction ();

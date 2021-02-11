@@ -37,24 +37,29 @@ int get_gcd(int a, int b)
 	}
 }
 
-Fraction::Fraction () : m_numerator(0), m_denominator(1) { }
-
-Fraction::Fraction (int numerator) : m_numerator(numerator), m_denominator(1) { }
-
-Fraction::Fraction (int numerator, int denominator = 1)
+void Fraction::fraction_reduction ()
 {
-	if (denominator * numerator > 0) {
-		m_numerator = abs(numerator);
-		m_denominator = abs(denominator);
+	if (m_denominator * m_numerator > 0) {
+		m_numerator = abs(m_numerator);
+		m_denominator = abs(m_denominator);
 	} else {
-		m_numerator = -abs(numerator);
-		m_denominator = abs(denominator);
+		m_numerator = -abs(m_numerator);
+		m_denominator = abs(m_denominator);
 	}
 	if (m_numerator != 0) {
 		int gcd = get_gcd(abs(m_numerator), m_denominator);
 		m_numerator /= gcd;
 		m_denominator /= gcd;
 	}
+}
+
+Fraction::Fraction () : m_numerator(0), m_denominator(1) { }
+
+Fraction::Fraction (int numerator) : m_numerator(numerator), m_denominator(1) { }
+
+Fraction::Fraction (int numerator, int denominator) : m_numerator(numerator), m_denominator(denominator)
+{
+	fraction_reduction();
 }
 
 Fraction::Fraction (double decimal_fraction)
@@ -82,18 +87,16 @@ Fraction::Fraction (std::string str)
 	}
 
 	int i = 0;
-	while ((str[i++] != '.') && (i < str.length()));
-
-	if (i < str.length()) {
+	if ((i = str.find('.')) != str.npos) {
 		std::string tmp = str;
-		tmp.erase(i - 1, str.length() - i + 1);
+		tmp.erase(i, str.length() - i);
 		std::stringstream ss;
 		ss << tmp;
 		// std::cout << "whole part is " << ss.str() << '\n';
 		int whole;
 		ss >> whole;
 
-		str.erase(0, i - 1);
+		str.erase(0, i);
 		str.insert(0, "0");
 		ss = std::stringstream();
 		ss << str;
@@ -107,6 +110,19 @@ Fraction::Fraction (std::string str)
 		// std::cout << '\n' << fraction.first << ' ' << fraction.second;
 		m_numerator = (fraction.first + (fraction.second * whole)) * sign;
 		m_denominator = fraction.second;
+	} else if ((i = str.find('/')) != str.npos) {
+		std::string tmp = str;
+		tmp.erase(i, str.length() - i);
+		std::stringstream ss;
+		ss << tmp;
+		ss >> m_numerator;
+
+		str.erase(0, i + 1);
+		ss = std::stringstream();
+		ss << str;
+		ss >> m_denominator;
+
+		fraction_reduction();
 	} else {
 		std::stringstream ss;
 		ss << str;
