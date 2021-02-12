@@ -49,6 +49,7 @@ Node *create_tree (std::string str)
 				break;
 			}
 		}
+	return nullptr;
 }
 
 void destroy_tree (Node *node)
@@ -65,6 +66,24 @@ void destroy_tree (Node *node)
 	delete node;
 }
 
+Fraction compute(Node *node)
+{
+	if (node->oper == 0) 
+		return node->value;
+	else 
+		switch (node->oper) {
+			case '+':
+			return compute(node->left) + compute(node->right);
+			case '-':
+			return compute(node->left) - compute(node->right);
+			case '*':
+			return compute(node->left) * compute(node->right);
+			case '/':
+			return compute(node->left) / compute(node->right);
+		}
+	return Fraction(0);
+}
+
 void fill_node (Node *node, char oper, int pos, std::string str)
 {
 	node->oper = oper;
@@ -72,7 +91,12 @@ void fill_node (Node *node, char oper, int pos, std::string str)
 
 	std::string l_str = str;
 	l_str.erase(pos, l_str.length() - pos);
-	node->left = create_tree(l_str);
+	if (l_str.length() == 0 && (oper == '+' || oper == '-')) {
+		node->left = new Node;
+		fill_node(node->left, Fraction(0));
+	} else {
+		node->left = create_tree(l_str);
+	}
 
 	str.erase(0, pos + 1);
 	node->right = create_tree(str);

@@ -13,3 +13,5 @@ struct Node {
 
 Node *create_tree (std::string str);
 void destroy_tree (Node *node);
+
+Fraction compute(Node *node);

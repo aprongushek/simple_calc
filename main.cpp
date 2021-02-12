@@ -18,7 +18,7 @@ int main ()
 	std::string str;
 	std::cin >> str;
 	Node *root = create_tree(str);
-
+	std::cout << compute(root);
 	destroy_tree(root);
 
 	return 0;
